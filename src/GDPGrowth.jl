@@ -1,9 +1,10 @@
 module GDPGrowth
 
 using CSV, Chain, DataFrames, Downloads, GLM, Plots, StatsBase
+export get_gdp_per_capita_dataframe, growth_rate, generate_growth_dataframe, plot_growth_rates, regression
 
 const COUNTRIES = [
-  "AUS", "ALB", "ABW",
+  "AUS", "ALB", "ABW", #write all countries you want to include in the analysis in here
 ]
 
 function get_gdp_per_capita_dataframe()
@@ -32,9 +33,14 @@ function countries_with_data(df, year1, year2)
   )
 end
 
-function generate_growth_dataframe(gdp_per_df, start_year, end_year)
+function generate_growth_dataframe(gdp_per_df, start_year, end_year; included_countries=nothing)
 
-  countries = countries_with_data(gdp_per_df, start_year, end_year)
+  countries = if isnothing(included_countries)
+    countries_with_data(gdp_per_df, start_year, end_year)
+  else
+    intersect(countries_with_data(gdp_per_df, start_year, end_year), included_countries)
+  end
+
   gdp_per_c_pivot = to_long_form(gdp_per_df)
 
   return DataFrame(
@@ -52,5 +58,6 @@ end
 function regression(growth_rate_df)
   return lm(@formula(gdp_growth ~ log_gdp), growth_rate_df)
 end
+
 
 end # module GDPGrowth
