@@ -57,7 +57,7 @@ function plot_growth_rates(growth_rate_df)
         ylabel = "Average Annual Growth Rate (g)",
         title = "Unconditional Convergence (1979–2019)",
         label = "Countries",
-        marker = (:circle, 5, :dodgerblue, stroke(0)), # Clean filled dots, no outline
+        marker = (:circle, 5, :dodgerblue, stroke(0)), 
         grid = true,
         gridstyle = :dot,
         gridalpha = 0.5,
@@ -78,7 +78,7 @@ function plot_growth_rates(growth_rate_df)
     )
     
    
-    savefig(p, "output_convergence_plot.png")
+    savefig(p, "plot.png")
     
     return p
 end
