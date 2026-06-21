@@ -52,7 +52,35 @@ function generate_growth_dataframe(gdp_per_df, start_year, end_year; included_co
 end
 
 function plot_growth_rates(growth_rate_df)
-  return scatter(growth_rate_df.gdp, growth_rate_df.gdp_growth)
+  return scatter(growth_rate_df.gdp, growth_rate_df.gdp_growth,
+        xlabel = "Log GDP per capita in Initial Year",
+        ylabel = "Average Annual Growth Rate (g)",
+        title = "Unconditional Convergence (1979–2019)",
+        label = "Countries",
+        marker = (:circle, 5, :dodgerblue, stroke(0)), # Clean filled dots, no outline
+        grid = true,
+        gridstyle = :dot,
+        gridalpha = 0.5,
+        legend = false,                     
+        background_color = :white,
+        foreground_color = :grey,
+        size = (800, 500),                  
+        margin = 5Plots.mm
+    )
+    
+    plot!(
+        growth_rate_df.log_gdp_first,
+        fitted(lm(@formula(gdp_growth ~ log_gdp_first), growth_rate_df)),
+        label = "Convergence Line (OLS)",
+        color = :crimson,
+        linewidth = 2,
+        linestyle = :solid
+    )
+    
+   
+    savefig(p, "output_convergence_plot.png")
+    
+    return p
 end
 
 function regression(growth_rate_df)
